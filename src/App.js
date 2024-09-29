@@ -1,25 +1,46 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+
+import Login from './components/Login';
+import SearchResults from './components/SearchResults';
 import './App.css';
+import SearchBar from './components/SearchBar';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const URLSearchString = window.location.search;
+    const params = new URLSearchParams(URLSearchString);
+    const [accessToken, setAccessToken] = useState('');
+    const [expiresAt, setExpiresAt] = useState(0);
+    const [tracks, setTracks] = useState([]);
+    const [playlistTracks, setPlaylistTracks] = useState([]);
+
+    useEffect(() => {
+        const urlToken = window.location.href.match(/access_token=([^&]*)/);
+        if (urlToken) {
+            const expiry = Date.now() + params.get('expires_in') - 30 * 1000;
+            window.localStorage.setItem('access_token', urlToken[1]);
+            window.localStorage.setItem('expires_at', expiry);
+            setAccessToken(urlToken[1]);
+            setExpiresAt(expiry);
+        }
+    }, []);
+
+    return (
+        <div className="App">
+            {!window.localStorage.getItem('access_token') ? (
+                <Login />
+            ) : (
+                <>
+                    <header className='p-24'>
+                        <SearchBar setTracks={setTracks} />
+                    </header>
+                    <section>
+
+                    </section>
+                </>
+            )}
+        </div>
+    );
 }
 
 export default App;
