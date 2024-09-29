@@ -34,9 +34,14 @@ function App() {
                     <header className='p-24'>
                         <SearchBar setTracks={setTracks} />
                     </header>
-                    <section>
-
+                    {tracks.length > 0 && (
+                    <section className='mx-auto grid grid-cols-2'>
+                        <SearchResults tracks={tracks} />
+                        <div>
+                            <h1>Playlist placeholder</h1>
+                        </div>
                     </section>
+                    )}
                 </>
             )}
         </div>

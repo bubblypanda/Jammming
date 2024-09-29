@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { searchSpotify } from "../utils/spotify";
+
+
 
 
 function SearchBar(props) {
@@ -20,6 +23,16 @@ function SearchBar(props) {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (formData.query != '') {
+            const response = await searchSpotify(formData.query);
+            if (response.error) {
+                // TODO handle error
+            }
+            else {
+                props.setTracks(response.results.items);
+            }
+        }
     };
 
     return (
